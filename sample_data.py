@@ -340,13 +340,16 @@ def create_bookings(users, services, time_slots, subscriptions):
         start_time = time(random.randint(9, 17), 0)
         end_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=service.duration)).time()
         
-        past_slot = TimeSlot.objects.create(
+        # Check if time slot already exists
+        past_slot, created = TimeSlot.objects.get_or_create(
             therapist=therapist,
             date=past_date,
             start_time=start_time,
-            end_time=end_time,
-            is_available=False
+            defaults={'end_time': end_time, 'is_available': False}
         )
+        
+        if not created:
+            print(f"Time slot already exists for therapist {therapist.user.get_full_name()} on {past_date} at {start_time}")
         
         # Check if user has subscription
         user_subscription = None
