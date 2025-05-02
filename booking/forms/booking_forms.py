@@ -12,6 +12,13 @@ class BookingForm(forms.ModelForm):
         help_text="Select a date for your appointment"
     )
     
+    time_slot = forms.ChoiceField(
+        choices=[],
+        widget=forms.Select(attrs={'class': 'form-control', 'required': True}),
+        help_text="Select a time slot for your appointment",
+        required=True
+    )
+    
     use_subscription = forms.BooleanField(
         required=False,
         label="Use my subscription",
@@ -24,7 +31,6 @@ class BookingForm(forms.ModelForm):
         fields = ['service', 'therapist', 'date', 'time_slot', 'notes']
         widgets = {
             'notes': forms.Textarea(attrs={'rows': 3}),
-            'time_slot': forms.HiddenInput(),
         }
     
     def __init__(self, *args, **kwargs):
