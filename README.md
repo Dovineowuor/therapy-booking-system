@@ -33,39 +33,88 @@ A comprehensive web application for therapy booking management and portfolio sho
 
 ## Installation
 
+### Quick Setup
+
+For a quick setup, you can use the provided setup script:
+
+```bash
+# Make the script executable
+chmod +x setup_project.sh
+
+# Run the setup script
+./setup_project.sh
+```
+
+This script will:
+1. Create a virtual environment
+2. Install dependencies
+3. Apply migrations
+4. Create a superuser
+5. Load sample data
+6. Start the development server
+
+### Manual Setup
+
+If you prefer to set up manually:
+
 1. Clone the repository:
-   ```
+   ```bash
    git clone https://github.com/yourusername/therapy_booking.git
    cd therapy_booking
    ```
 
 2. Create a virtual environment and activate it:
-   ```
+   ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. Install dependencies:
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 
 4. Apply migrations:
-   ```
+   ```bash
    python manage.py migrate
    ```
 
 5. Create a superuser:
-   ```
+   ```bash
    python manage.py createsuperuser
    ```
 
-6. Run the development server:
+6. Load sample data (optional):
+   ```bash
+   python sample_data.py
    ```
+
+7. Run the development server:
+   ```bash
    python manage.py runserver
    ```
 
-7. Access the application at http://127.0.0.1:8000/
+8. Access the application at http://127.0.0.1:8000/
+
+### GitHub Repository Setup
+
+To push this project to your own GitHub repository:
+
+1. Create a new repository on GitHub named `therapy-booking-system` (or your preferred name)
+
+2. Use the provided script to set up the remote:
+   ```bash
+   # Make the script executable
+   chmod +x setup_github.sh
+   
+   # Run the script with your GitHub username
+   ./setup_github.sh your_github_username [optional_repository_name]
+   ```
+
+3. Push the code to your repository:
+   ```bash
+   git push -u origin main
+   ```
 
 ## Project Structure
 
