@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from booking.views.booking_views import home, register  # Use the register view from booking_views.py
 from booking.views.booking_views import custom_login
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
