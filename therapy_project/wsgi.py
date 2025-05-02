@@ -11,6 +11,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'therapy_project.settings')
+if os.environ.get('DJANGO_DEBUG', 'True') == 'True':
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'therapy_project.settings_dev')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'therapy_project.settings')
 
 application = get_wsgi_application()
