@@ -1,0 +1,410 @@
+/* ==================================================
+   Root Variables
+================================================== */
+:root {
+    --primary: #2d5242;
+    --primary-subtle: #3f6351fa;
+    --light-green: #3e7057;
+    --individual-green: #4a8063;
+    --couples-blue: #3d6670;
+    --teen-orange: #b26600;
+    --text-white: #ffffff;
+}
+
+/* ==================================================
+   Global Styles
+================================================== */
+body {
+    font-family: 'Arial', 'Roboto', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.text-primary {
+    --bs-text-opacity: 1;
+    color: var(--primary) !important;
+}
+
+.text-primary-subtle {
+    --bs-text-opacity: 1;
+    color: var(--primary-subtle) !important;
+}
+
+.text-white {
+    --bs-text-opacity: 1;
+    color: var(--text-white) !important;
+}
+
+.bg-primary,
+.bg-primary-green {
+    background-color: var(--primary) !important;
+}
+
+.bg-primary-subtle {
+    --bs-bg-opacity: 1;
+    background-color: var(--primary-subtle) !important;
+}
+
+/* ==================================================
+   Typography & Branding
+================================================== */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.pricing-card-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+/* ==================================================
+   Hero Section
+================================================== */
+.hero,
+.hero-section {
+    background-color: #f8f9fa;
+    padding: 5rem 0;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.hero h1 {
+    font-weight: 700;
+    color: var(--primary) !important;
+}
+
+/* ==================================================
+   Cards
+================================================== */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* ==================================================
+   Buttons
+================================================== */
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+.btn-outline-light {
+    border-color: white !important;
+    color: white !important;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-light {
+    background-color: white !important;
+    color: var(--primary) !important;
+}
+
+/* ==================================================
+   Therapy Cards
+================================================== */
+.therapy-card {
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+    color: white !important;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.therapy-card:hover {
+    transform: translateY(-5px);
+}
+
+.therapy-card img,
+.therapy-card svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.individual-card {
+    background-color: var(--individual-green) !important;
+}
+
+.couples-card {
+    background-color: var(--couples-blue) !important;
+}
+
+.teen-card {
+    background-color: var(--teen-orange) !important;
+}
+
+/* ==================================================
+   Forms & Inputs
+================================================== */
+.booking-form {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+    position: relative;
+}
+
+/* ==================================================
+   Rating Field
+================================================== */
+.rating-field .rating-options {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rating-field .rating-option {
+    margin-right: 1rem;
+}
+
+.rating-field input[type="radio"] {
+    display: none;
+}
+
+.rating-field .rating-label {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.rating-field input[type="radio"]:checked + .rating-label {
+    background-color: #f8f9fa !important;
+}
+
+/* ==================================================
+   Calendar
+================================================== */
+.calendar-container {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.time-slots-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.time-slot {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-slot .card:hover {
+    border-color: var(--primary) !important;
+}
+
+.time-slot.selected .card {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
+.time-slot.unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ==================================================
+   Testimonials
+================================================== */
+.testimonial {
+    background-color: #f8f9fa !important;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.testimonial:before {
+    content: '\201C';
+    font-size: 4rem;
+    position: absolute;
+    top: -1rem;
+    left: 1rem;
+    color: rgba(0, 123, 255, 0.1);
+}
+
+.testimonial-author {
+    font-weight: bold   !important;
+    color: var(--primary) !important;
+}
+
+/* ==================================================
+   Portfolio
+================================================== */
+.portfolio-item {
+    margin-bottom: 2rem;
+}
+
+.portfolio-item .portfolio-img {
+    overflow: hidden;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.portfolio-item img {
+    transition: transform 0.5s ease;
+}
+
+.portfolio-item:hover img {
+    transform: scale(1.05);
+}
+
+/* ==================================================
+   Footer
+================================================== */
+footer {
+    margin-top: 3rem;
+}
+
+footer .social-icons a {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    transition: opacity 0.3s;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.social-icons a:hover {
+    opacity: 0.8;
+}
+
+/* ==================================================
+   Wave Bottom
+================================================== */
+.wave-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.wave-bottom svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 70px;
+}
+
+.wave-bottom .shape-fill {
+    fill: #ffffff;
+}
+
+/* ==================================================
+   Utility Classes
+================================================== */
+.main-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.illustration-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    height: 200px;
+}
+
+.benefits-list {
+    list-style: none;
+    padding: 0;
+}
+
+.benefits-list li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.benefits-list li::before {
+    content: "\f127"; /* Bootstrap Icons check circle */
+    font-family: "bootstrap-icons";
+    color: #25D366;
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+}
+
+/* ==================================================
+   Responsive
+================================================== */
+@media (max-width: 768px) {
+    .hero {
+        padding: 3rem 0;
+    }
+
+    .card-img-top {
+        height: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 2rem 0;
+    }
+
+    .card-img-top {
+        height: 160px;
+    }
+}
