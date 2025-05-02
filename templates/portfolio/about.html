@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Therapy Booking{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4">About Us</h1>
+            <p class="lead">Learn more about our mission and values</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if about.image %}
+                    <div class="text-center mb-4">
+                        <img src="{{ about.image.url }}" alt="About Us" class="img-fluid rounded" style="max-height: 400px; object-fit: cover;">
+                    </div>
+                    {% endif %}
+                    
+                    <h2 class="mb-4">Our Story</h2>
+                    <p class="lead">{{ about.content|safe }}</p>
+
+                    <div class="row mt-5">
+                        <div class="col-md-6">
+                            <h3>Mission Statement</h3>
+                            <p>{{ about.mission_statement|safe }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Vision Statement</h3>
+                            <p>{{ about.vision_statement|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h3>Our Values</h3>
+                            <p>{{ about.values|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h3>History</h3>
+                            <p>{{ about.history|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

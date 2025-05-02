@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">{{ career.title }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>Department:</strong> {{ career.get_department_display }}</p>
+                            <p><strong>Job Type:</strong> {{ career.get_job_type_display }}</p>
+                            <p><strong>Location:</strong> {{ career.location }}{% if career.is_remote %} (Remote){% endif %}</p>
+                            {% if career.salary_range %}
+                            <p><strong>Salary Range:</strong> {{ career.salary_range }}</p>
+                            {% endif %}
+                            {% if career.experience_required %}
+                            <p><strong>Experience Required:</strong> {{ career.experience_required }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <h4 class="mt-4">Job Description</h4>
+                    <p>{{ career.description|linebreaks }}</p>
+
+                    <h4 class="mt-4">Responsibilities</h4>
+                    <div class="responsibilities">
+                        {{ career.responsibilities|linebreaks }}
+                    </div>
+
+                    <h4 class="mt-4">Requirements</h4>
+                    <div class="requirements">
+                        {{ career.requirements|linebreaks }}
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="mailto:careers@yourcompany.com?subject=Application for {{ career.title }}" class="btn btn-primary">
+                            Apply Now
+                        </a>
+                        <a href="{{ career.get_absolute_url }}" class="btn btn-outline-primary ms-2">
+                            Back to Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Messages Example (can be removed if not needed) -->
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Welcome to Therapy Booking! Discover our services and book your first session today.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section bg-primary-green text-center text-white">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 mb-4">Your Mental Health Matters</h1>
+                        <p class="lead mb-5">Book therapy sessions with our experienced professionals and start your journey to better mental health today.</p>
+                    </div>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-3 mb-4">
+                        <div class="therapy-card individual-card h-100">
+                            <h3>Individual</h3>
+                            <p>For myself <span class="custom-radio"></span></p>
+                            <div class="illustration-container">
+                                <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Person -->
+                                    <path d="M100 70C111.046 70 120 61.0457 120 50C120 38.9543 111.046 30 100 30C88.9543 30 80 38.9543 80 50C80 61.0457 88.9543 70 100 70Z" fill="#FFD166"/>
+                                    <path d="M135 140V120C135 103.431 121.569 90 105 90H95C78.4315 90 65 103.431 65 120V140H135Z" fill="#FFD166"/>
+                                    <!-- Plant -->
+                                    <path d="M140 120C140 120 150 110 160 120" stroke="#4D8B31" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M145 110C145 110 155 100 165 110" stroke="#4D8B31" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M150 100C150 100 160 90 170 100" stroke="#4D8B31" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M155 140V90" stroke="#4D8B31" stroke-width="3" stroke-linecap="round"/>
+                                    <!-- Pot -->
+                                    <path d="M140 140H170V160C170 165.523 165.523 170 160 170H150C144.477 170 140 165.523 140 160V140Z" fill="#E6E6E6"/>
+                                    <!-- Desk -->
+                                    <rect x="30" y="140" width="140" height="10" fill="#A3D9A5"/>
+                                    <rect x="40" y="150" width="120" height="20" fill="#A3D9A5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="therapy-card couples-card h-100">
+                            <h3>Couples</h3>
+                            <p>For me and my partner <span class="custom-radio"></span></p>
+                            <div class="illustration-container">
+                                <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Person 1 -->
+                                    <path d="M70 70C81.0457 70 90 61.0457 90 50C90 38.9543 81.0457 30 70 30C58.9543 30 50 38.9543 50 50C50 61.0457 58.9543 70 70 70Z" fill="#B8E0D2"/>
+                                    <path d="M95 140V120C95 103.431 81.5685 90 65 90H55C38.4315 90 25 103.431 25 120V140H95Z" fill="#B8E0D2"/>
+                                    <!-- Person 2 -->
+                                    <path d="M130 70C141.046 70 150 61.0457 150 50C150 38.9543 141.046 30 130 30C118.954 30 110 38.9543 110 50C110 61.0457 118.954 70 130 70Z" fill="#95D5B2"/>
+                                    <path d="M175 140V120C175 103.431 161.569 90 145 90H135C118.431 90 105 103.431 105 120V140H175Z" fill="#95D5B2"/>
+                                    <!-- Heart -->
+                                    <path d="M100 90C100 90 85 70 70 80C55 90 65 110 100 130C135 110 145 90 130 80C115 70 100 90 100 90Z" fill="#EF476F" fill-opacity="0.5"/>
+                                    <!-- Floor -->
+                                    <rect x="20" y="140" width="160" height="30" fill="#809BCE"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="therapy-card teen-card h-100">
+                            <h3>Teen</h3>
+                            <p>For my child <span class="custom-radio"></span></p>
+                            <div class="illustration-container">
+                                <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Teen -->
+                                    <path d="M100 65C111.046 65 120 56.0457 120 45C120 33.9543 111.046 25 100 25C88.9543 25 80 33.9543 80 45C80 56.0457 88.9543 65 100 65Z" fill="#FFB347"/>
+                                    <path d="M135 135V115C135 98.4315 121.569 85 105 85H95C78.4315 85 65 98.4315 65 115V135H135Z" fill="#FFB347"/>
+                                    <!-- Backpack -->
+                                    <path d="M140 100H160V140C160 145.523 155.523 150 150 150H140V100Z" fill="#F4845F"/>
+                                    <path d="M140 105H135C132.239 105 130 107.239 130 110V115C130 117.761 132.239 120 135 120H140V105Z" fill="#F4845F"/>
+                                    <!-- Book -->
+                                    <rect x="40" y="100" width="30" height="40" fill="#F25F5C"/>
+                                    <rect x="45" y="110" width="20" height="2" fill="white"/>
+                                    <rect x="45" y="115" width="20" height="2" fill="white"/>
+                                    <rect x="45" y="120" width="20" height="2" fill="white"/>
+                                    <rect x="45" y="125" width="15" height="2" fill="white"/>
+                                    <!-- Floor -->
+                                    <rect x="30" y="135" width="140" height="40" fill="#E09F3E"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <a href="{% url 'booking:booking' %}" class="btn btn-light btn-lg me-3">Book a Session</a>
+                        <a href="{% url 'booking:therapists' %}" class="btn btn-outline-light btn-lg">Meet Our Therapists</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- HSA/FSA Info -->
+            <div class="container position-absolute bottom-0 end-0 mb-4 me-4">
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center text-white">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                                <rect x="2" y="4" width="20" height="16" rx="2" stroke="white" stroke-width="2"/>
+                                <path d="M8 12H16" stroke="white" stroke-width="2"/>
+                                <path d="M8 8H16" stroke="white" stroke-width="2"/>
+                                <path d="M8 16H12" stroke="white" stroke-width="2"/>
+                            </svg>
+                            We accept: <strong>HSA/FSA</strong>
+                            <br>for individual and teen therapy
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wave Bottom -->
+            <div class="wave-bottom">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5">Our Services</h2>
+                <div class="row">
+                    <!-- Service Card 1 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Individual Therapy">
+                            <div class="card-body">
+                                <h5 class="card-title">Individual Therapy</h5>
+                                <p class="card-text">One-on-one therapy sessions tailored to your specific needs and concerns.</p>
+                                <p class="card-text"><small class="text-muted">50 minutes | $85</small></p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{% url 'booking:services' %}" class="btn btn-outline-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Card 2 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Couples Therapy">
+                            <div class="card-body">
+                                <h5 class="card-title">Couples Therapy</h5>
+                                <p class="card-text">Work through relationship challenges with your partner in a supportive environment.</p>
+                                <p class="card-text"><small class="text-muted">60 minutes | $110</small></p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{% url 'booking:services' %}" class="btn btn-outline-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Card 3 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Teen Counseling">
+                            <div class="card-body">
+                                <h5 class="card-title">Teen Counseling</h5>
+                                <p class="card-text">Specialized therapy for adolescents dealing with life's challenges.</p>
+                                <p class="card-text"><small class="text-muted">45 minutes | $75</small></p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{% url 'booking:services' %}" class="btn btn-outline-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'booking:services' %}" class="btn btn-primary">View All Services</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Therapists Section -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center mb-5">Our Therapists</h2>
+                <div class="row">
+                    <!-- Therapist Card 1 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/350x300" class="card-img-top" alt="Dr. Sarah Johnson">
+                            <div class="card-body">
+                                <h5 class="card-title">Dr. Sarah Johnson</h5>
+                                <p class="card-text"><strong>Specialization:</strong> Anxiety & Depression</p>
+                                <p class="card-text">Dr. Johnson has over 10 years of experience helping clients overcome anxiety and depression through evidence-based approaches.</p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{% url 'booking:therapist_detail' %}" class="btn btn-outline-primary">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Therapist Card 2 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/350x300" class="card-img-top" alt="Dr. Michael Chen">
+                            <div class="card-body">
+                                <h5 class="card-title">Dr. Michael Chen</h5>
+                                <p class="card-text"><strong>Specialization:</strong> Couples Therapy</p>
+                                <p class="card-text">Dr. Chen specializes in helping couples improve communication and rebuild trust in their relationships.</p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{% url 'booking:therapist_detail' %}" class="btn btn-outline-primary">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Therapist Card 3 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="https://via.placeholder.com/350x300" class="card-img-top" alt="Dr. Lisa Rodriguez">
+                            <div class="card-body">
+                                <h5 class="card-title">Dr. Lisa Rodriguez</h5>
+                                <p class="card-text"><strong>Specialization:</strong> Teen & Adolescent Therapy</p>
+                                <p class="card-text">Dr. Rodriguez has dedicated her career to helping teens navigate the challenges of adolescence and build resilience.</p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{% url 'booking:therapist_detail' %}" class="btn btn-outline-primary">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'booking:therapists' %}" class="btn btn-primary">View All Therapists</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5">How It Works</h2>
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">1</h3>
+                        </div>
+                        <h4>Choose a Service</h4>
+                        <p>Browse our range of therapy services and select the one that best suits your needs.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">2</h3>
+                        </div>
+                        <h4>Book an Appointment</h4>
+                        <p>Select a convenient date and time from our available slots to schedule your session.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">3</h3>
+                        </div>
+                        <h4>Attend Your Session</h4>
+                        <p>Meet with your therapist at the scheduled time and begin your journey to better mental health.</p>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'booking:booking' %}" class="btn btn-primary btn-lg">Book Now</a>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
