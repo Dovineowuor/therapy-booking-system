@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services - Therapy Booking{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/booking.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Our Therapy Services</h1>
+            <p class="lead">Discover the right therapy approach for your needs</p>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2>Find Your Path to Wellness</h2>
+                            <p class="lead">We offer a variety of therapy services to help you on your journey to mental and emotional well-being.</p>
+                            <p>Our experienced therapists are trained in multiple therapeutic approaches and can help you address a wide range of concerns.</p>
+                            <div class="mt-4">
+                                <a href="{% url 'booking:booking' %}" class="btn btn-primary btn-lg me-2">Book Now</a>
+                                <a href="{% url 'booking:membership_plans' %}" class="btn btn-outline-primary btn-lg">View Membership Plans</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-none d-md-block">
+                            <img src="{% static 'images/therapy-illustration.svg' %}" alt="Therapy Illustration" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 service-card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">{{ service.name }}</h3>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p>{{ service.description }}</p>
+                    <div class="mt-auto">
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-clock me-2"></i><strong>Duration:</strong> {{ service.duration }} minutes</li>
+                            <li><i class="bi bi-cash me-2"></i><strong>Price:</strong> ${{ service.price }}</li>
+                        </ul>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'booking:service_detail' service.id %}" class="btn btn-outline-primary">Learn More</a>
+                            <a href="{% url 'booking:booking' %}?service_id={{ service.id }}" class="btn btn-primary">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <p>No services are currently available. Please check back later.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h3>Why Choose Our Therapy Services?</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="bi bi-person-check text-primary" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">Experienced Therapists</h4>
+                                <p>Our therapists are licensed professionals with years of experience in their specialties.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="bi bi-shield-check text-primary" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">Confidential & Safe</h4>
+                                <p>Your privacy is our priority. All sessions are completely confidential.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="bi bi-calendar-check text-primary" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">Flexible Scheduling</h4>
+                                <p>Book appointments that fit your schedule, with evening and weekend options available.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="bi bi-heart text-primary" style="font-size: 3rem;"></i>
+                                <h4 class="mt-3">Personalized Care</h4>
+                                <p>We tailor our approach to meet your unique needs and goals.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

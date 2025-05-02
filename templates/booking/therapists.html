@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Therapists - Therapy Booking{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/booking.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Our Therapists</h1>
+            <p class="lead">Meet our team of experienced and compassionate mental health professionals</p>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" action="{% url 'booking:therapists' %}">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search by name, specialty, or approach..." name="q" value="{{ request.GET.q }}">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for therapist in therapists %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 therapist-card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        {% if therapist.profile_image %}
+                        <img src="{{ therapist.profile_image.url }}" alt="{{ therapist.name }}" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px;">
+                            <i class="bi bi-person-fill text-white" style="font-size: 4rem;"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="card-title">{{ therapist.name }}</h3>
+                    <p class="text-muted">{{ therapist.title }}</p>
+                    
+                    <div class="mb-3">
+                        {% for specialty in therapist.specialties %}
+                        <span class="badge bg-primary me-1 mb-1">{{ specialty }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <p>{{ therapist.bio|truncatewords:25 }}</p>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'booking:therapist_detail' therapist.id %}" class="btn btn-outline-primary">View Profile</a>
+                        <a href="{% url 'booking:booking' %}?therapist_id={{ therapist.id }}" class="btn btn-primary">Book Session</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <p>No therapists found matching your search criteria. Please try a different search or view all therapists.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h3>Join Our Team</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4>Are You a Licensed Therapist?</h4>
+                            <p>We're always looking for talented and compassionate therapists to join our team. If you're interested in working with us, we'd love to hear from you.</p>
+                            <p>Benefits of joining our practice:</p>
+                            <ul>
+                                <li>Flexible scheduling</li>
+                                <li>Competitive compensation</li>
+                                <li>Supportive professional community</li>
+                                <li>Modern facilities and technology</li>
+                                <li>Administrative support</li>
+                            </ul>
+                            <a href="{% url 'portfolio:contact' %}" class="btn btn-primary">Contact Us</a>
+                        </div>
+                        <div class="col-md-4 d-none d-md-block text-center">
+                            <i class="bi bi-people-fill text-primary" style="font-size: 8rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

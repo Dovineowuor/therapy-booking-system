@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Our Portfolio</h1>
+        <p class="lead mb-5">Explore our work and see how we've helped clients achieve their mental health goals.</p>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Projects</h2>
+        <div class="row">
+            {% for project in featured_projects %}
+            <div class="col-md-4 portfolio-item">
+                <div class="card h-100">
+                    <div class="portfolio-img">
+                        {% if project.image %}
+                        <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                        {% else %}
+                        <img src="{% static 'images/project-placeholder.jpg' %}" class="card-img-top" alt="{{ project.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text"><small class="text-muted">{{ project.category.name }}</small></p>
+                        <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'portfolio:project_detail' project.slug %}" class="btn btn-outline-primary">View Project</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No featured projects available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:project_list' %}" class="btn btn-primary">View All Projects</a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Project Categories</h2>
+        <div class="row justify-content-center">
+            {% for category in categories %}
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description|truncatewords:10 }}</p>
+                        <a href="{% url 'portfolio:project_list' %}?category={{ category.slug }}" class="btn btn-outline-primary">View Projects</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No categories available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Client Testimonials</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4">
+                <div class="testimonial">
+                    <p class="mb-3">"{{ testimonial.quote }}"</p>
+                    <div class="d-flex align-items-center">
+                        {% if testimonial.image %}
+                        <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle me-3" width="50" height="50">
+                        {% endif %}
+                        <div>
+                            <p class="mb-0 testimonial-author">{{ testimonial.name }}</p>
+                            {% if testimonial.position or testimonial.company %}
+                            <p class="mb-0 small text-muted">
+                                {% if testimonial.position %}{{ testimonial.position }}{% endif %}
+                                {% if testimonial.position and testimonial.company %} at {% endif %}
+                                {% if testimonial.company %}{{ testimonial.company }}{% endif %}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No testimonials available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:testimonials' %}" class="btn btn-primary">View All Testimonials</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Project?</h2>
+        <p class="lead mb-4">Contact us today to discuss how we can help you achieve your mental health goals.</p>
+        <a href="{% url 'portfolio:contact' %}" class="btn btn-primary btn-lg">Get in Touch</a>
+    </div>
+</section>
+{% endblock %}

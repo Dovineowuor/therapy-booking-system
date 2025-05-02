@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Therapy Booking - Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Your Mental Health Matters</h1>
+        <p class="lead mb-5">Book therapy sessions with our experienced professionals and start your journey to better mental health today.</p>
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'booking:booking' %}" class="btn btn-primary btn-lg me-3">Book a Session</a>
+            <a href="{% url 'booking:therapists' %}" class="btn btn-outline-primary btn-lg">Meet Our Therapists</a>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Services</h2>
+        <div class="row">
+            {% for service in services %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}">
+                    {% else %}
+                    <img src="{% static 'images/service-placeholder.jpg' %}" class="card-img-top" alt="{{ service.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ service.name }}</h5>
+                        <p class="card-text">{{ service.description|truncatewords:20 }}</p>
+                        <p class="card-text"><small class="text-muted">{{ service.duration }} minutes | ${{ service.price }}</small></p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'booking:service_detail' service.id %}" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No services available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'booking:services' %}" class="btn btn-primary">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Therapists Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Therapists</h2>
+        <div class="row">
+            {% for therapist in therapists %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    {% if therapist.profile_image %}
+                    <img src="{{ therapist.profile_image.url }}" class="card-img-top" alt="{{ therapist }}">
+                    {% else %}
+                    <img src="{% static 'images/therapist-placeholder.jpg' %}" class="card-img-top" alt="{{ therapist }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ therapist }}</h5>
+                        <p class="card-text"><strong>Specialization:</strong> {{ therapist.specialization }}</p>
+                        <p class="card-text">{{ therapist.bio|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'booking:therapist_detail' therapist.id %}" class="btn btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No therapists available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'booking:therapists' %}" class="btn btn-primary">View All Therapists</a>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                    <h3 class="m-0">1</h3>
+                </div>
+                <h4>Choose a Service</h4>
+                <p>Browse our range of therapy services and select the one that best suits your needs.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                    <h3 class="m-0">2</h3>
+                </div>
+                <h4>Book an Appointment</h4>
+                <p>Select a convenient date and time from our available slots to schedule your session.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px;">
+                    <h3 class="m-0">3</h3>
+                </div>
+                <h4>Attend Your Session</h4>
+                <p>Meet with your therapist at the scheduled time and begin your journey to better mental health.</p>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a href="{% url 'booking:booking' %}" class="btn btn-primary btn-lg">Book Now</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

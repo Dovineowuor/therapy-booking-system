@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Payment - Therapy Booking{% endblock %}
+
+{% block extra_css %}
+<style>
+    .payment-card {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .payment-summary {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .payment-amount {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+    
+    .payment-method-option {
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .payment-method-option:hover {
+        border-color: #007bff;
+    }
+    
+    .payment-method-option.selected {
+        border-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+    
+    .card-input {
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Complete Your Payment</h1>
+            <p class="lead">Secure payment processing for your membership</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card payment-card">
+                <div class="card-body">
+                    <div class="payment-summary text-center">
+                        <h3>Order Summary</h3>
+                        <p>{{ subscription.plan.name }} Membership</p>
+                        <div class="payment-amount">${{ amount }}</div>
+                        <p class="text-muted">Valid for {{ subscription.plan.duration_days }} days</p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h4>Payment Method</h4>
+                            {{ form.payment_method|as_crispy_field }}
+                        </div>
+                        
+                        <div id="credit-card-fields" class="mb-4">
+                            <h4>Card Details</h4>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    {{ form.cardholder_name|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    {{ form.card_number|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.card_expiry|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.card_cvc|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">Complete Payment</button>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-lock-fill"></i> Your payment information is secure and encrypted
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentMethodSelect = document.getElementById('id_payment_method');
+        const creditCardFields = document.getElementById('credit-card-fields');
+        
+        function toggleCreditCardFields() {
+            if (paymentMethodSelect.value === 'credit_card') {
+                creditCardFields.style.display = 'block';
+            } else {
+                creditCardFields.style.display = 'none';
+            }
+        }
+        
+        // Initial toggle
+        toggleCreditCardFields();
+        
+        // Toggle on change
+        paymentMethodSelect.addEventListener('change', toggleCreditCardFields);
+        
+        // Format card number with spaces
+        const cardNumberInput = document.getElementById('id_card_number');
+        cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+            
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            
+            e.target.value = formattedValue;
+        });
+        
+        // Format expiry date
+        const expiryInput = document.getElementById('id_card_expiry');
+        expiryInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            
+            e.target.value = value;
+        });
+    });
+</script>
+{% endblock %}

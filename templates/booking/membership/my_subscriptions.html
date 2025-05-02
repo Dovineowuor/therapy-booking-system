@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Subscriptions - Therapy Booking{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">My Subscriptions</h1>
+            <p class="lead">Manage your membership subscriptions</p>
+        </div>
+    </div>
+    
+    {% if active_subscription %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Active Subscription</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>{{ active_subscription.plan.name }}</h4>
+                            <p>{{ active_subscription.plan.description }}</p>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <h5>Subscription Details</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Status:</strong> <span class="badge bg-success">Active</span></li>
+                                        <li><strong>Start Date:</strong> {{ active_subscription.start_date|date:"F j, Y" }}</li>
+                                        <li><strong>End Date:</strong> {{ active_subscription.end_date|date:"F j, Y" }}</li>
+                                        <li><strong>Auto-Renew:</strong> {% if active_subscription.auto_renew %}Yes{% else %}No{% endif %}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Usage</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Sessions Remaining:</strong> {{ active_subscription.sessions_remaining }}</li>
+                                        <li><strong>Days Remaining:</strong> {{ active_subscription.days_remaining }}</li>
+                                        {% if active_subscription.plan.discount_percent > 0 %}
+                                        <li><strong>Discount on Additional Sessions:</strong> {{ active_subscription.plan.discount_percent }}%</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center">
+                            <div class="mb-3">
+                                <a href="{% url 'booking:booking' %}" class="btn btn-primary btn-lg">Book a Session</a>
+                            </div>
+                            <div>
+                                <a href="{% url 'booking:cancel_subscription' active_subscription.id %}" class="btn btn-outline-danger">Cancel Subscription</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4 class="alert-heading">No Active Subscription</h4>
+                <p>You don't have any active subscription plans. Subscribe to a plan to enjoy benefits like included therapy sessions and discounts.</p>
+                <hr>
+                <p class="mb-0">
+                    <a href="{% url 'booking:membership_plans' %}" class="btn btn-primary">View Membership Plans</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if subscriptions %}
+    <div class="row">
+        <div class="col-12">
+            <h3>Subscription History</h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subscription in subscriptions %}
+                        <tr>
+                            <td>{{ subscription.plan.name }}</td>
+                            <td>{{ subscription.start_date|date:"M d, Y" }}</td>
+                            <td>{{ subscription.end_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if subscription.status == 'active' and subscription.end_date > now %}
+                                <span class="badge bg-success">Active</span>
+                                {% elif subscription.status == 'cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                                {% elif subscription.status == 'expired' or subscription.end_date < now %}
+                                <span class="badge bg-secondary">Expired</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">{{ subscription.status|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td>${{ subscription.plan.price }}</td>
+                            <td>
+                                {% if subscription.status == 'active' and subscription.end_date > now %}
+                                <a href="{% url 'booking:cancel_subscription' subscription.id %}" class="btn btn-sm btn-outline-danger">Cancel</a>
+                                {% elif subscription.status == 'expired' or subscription.end_date < now %}
+                                <a href="{% url 'booking:subscribe_to_plan' subscription.plan.id %}" class="btn btn-sm btn-outline-primary">Renew</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <a href="{% url 'booking:membership_plans' %}" class="btn btn-primary btn-lg">View Membership Plans</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

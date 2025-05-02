@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Book a Therapy Session - Therapy Booking{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/booking.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Book a Therapy Session</h1>
+            <p class="lead">Schedule your appointment with our professional therapists</p>
+        </div>
+    </div>
+    
+    {% if active_subscription %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-star-fill text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h4 class="alert-heading">You have an active subscription!</h4>
+                        <p class="mb-0">You have <strong>{{ active_subscription.sessions_remaining }}</strong> sessions remaining in your <strong>{{ active_subscription.plan.name }}</strong> plan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card booking-form-container">
+                <div class="card-body">
+                    <form method="post" id="booking-form">
+                        {% csrf_token %}
+                        {% crispy form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">Booking Information</h4>
+                </div>
+                <div class="card-body">
+                    <h5><i class="bi bi-info-circle text-primary me-2"></i>How to Book</h5>
+                    <ol>
+                        <li>Select a service and therapist</li>
+                        <li>Choose a date for your appointment</li>
+                        <li>Select an available time slot</li>
+                        <li>Add any notes or special requests</li>
+                        <li>If you have an active subscription, you can use it for this booking</li>
+                        <li>Click "Book Appointment" to confirm</li>
+                    </ol>
+                    
+                    <hr>
+                    
+                    <h5><i class="bi bi-question-circle text-primary me-2"></i>Need Help?</h5>
+                    <p>If you need assistance with booking, please contact us:</p>
+                    <p><i class="bi bi-telephone me-2"></i> (123) 456-7890</p>
+                    <p><i class="bi bi-envelope me-2"></i> booking@therapybooking.com</p>
+                    
+                    {% if not active_subscription %}
+                    <hr>
+                    <div class="text-center">
+                        <h5><i class="bi bi-star text-warning me-2"></i>Save with a Membership</h5>
+                        <p>Get discounted sessions and priority booking with our membership plans.</p>
+                        <a href="{% url 'booking:membership_plans' %}" class="btn btn-outline-primary">View Membership Plans</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h3>Additional Information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4><i class="bi bi-clock text-primary me-2"></i>Cancellation Policy</h4>
+                            <p>If you need to cancel or reschedule your appointment, please do so at least 24 hours in advance to avoid any cancellation fees.</p>
+                            
+                            <h4><i class="bi bi-shield-check text-primary me-2"></i>Confidentiality</h4>
+                            <p>All therapy sessions are confidential. Your privacy is important to us, and we adhere to strict ethical guidelines and legal requirements regarding confidentiality.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4><i class="bi bi-geo-alt text-primary me-2"></i>Location</h4>
+                            <p>Our therapy center is located at 123 Healing Street, Wellness City. We offer both in-person and virtual sessions.</p>
+                            
+                            <h4><i class="bi bi-credit-card text-primary me-2"></i>Payment Information</h4>
+                            <p>Payment is due at the time of service. We accept cash, credit cards, and health insurance. If you have an active subscription, you can use your included sessions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/booking.js' %}"></script>
+{% endblock %}

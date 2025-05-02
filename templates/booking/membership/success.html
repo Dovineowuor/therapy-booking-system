@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Subscription Successful - Therapy Booking{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-lg-8 offset-lg-2 text-center">
+            <div class="card">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                    </div>
+                    <h1 class="display-4 mb-4">Thank You!</h1>
+                    <h2 class="mb-4">Your subscription was successful</h2>
+                    
+                    <div class="alert alert-success mb-4">
+                        <p class="mb-0">You are now subscribed to the <strong>{{ subscription.plan.name }}</strong> plan.</p>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6 offset-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h4 class="card-title">Subscription Details</h4>
+                                    <ul class="list-unstyled text-start">
+                                        <li><strong>Plan:</strong> {{ subscription.plan.name }}</li>
+                                        <li><strong>Start Date:</strong> {{ subscription.start_date|date:"F j, Y" }}</li>
+                                        <li><strong>End Date:</strong> {{ subscription.end_date|date:"F j, Y" }}</li>
+                                        <li><strong>Sessions Included:</strong> {{ subscription.sessions_remaining }}</li>
+                                        {% if subscription.plan.discount_percent > 0 %}
+                                        <li><strong>Discount on Additional Sessions:</strong> {{ subscription.plan.discount_percent }}%</li>
+                                        {% endif %}
+                                        <li><strong>Auto-Renew:</strong> {% if subscription.auto_renew %}Yes{% else %}No{% endif %}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="mb-4">
+                        You can now enjoy all the benefits of your membership plan. Book therapy sessions, access resources, and more.
+                    </p>
+                    
+                    <div class="d-flex justify-content-center">
+                        <a href="{% url 'booking:booking' %}" class="btn btn-primary btn-lg me-3">Book a Session</a>
+                        <a href="{% url 'booking:my_subscriptions' %}" class="btn btn-outline-primary btn-lg">My Subscriptions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
