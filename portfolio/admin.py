@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Project, ProjectImage, Testimonial
+from .models import Category, Project, ProjectImage, Testimonial, Career, Applications, About
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -19,6 +19,33 @@ class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'date_completed'
     inlines = [ProjectImageInline]
+
+@admin.register(Career)
+class CareerAdmin(admin.ModelAdmin):
+    list_display = ('title', 'department', 'job_type', 'location', 'is_remote', 'salary_range', 'is_active', 'created_at')
+    list_filter = ('department', 'job_type', 'location', 'is_remote', 'is_active')
+    search_fields = ('title', 'description', 'requirements', 'responsibilities', 'experience_required')
+    list_editable = ('is_active',)
+    fieldsets = (
+        ('Job Details', {
+            'fields': ('title', 'department', 'job_type', 'location', 'is_remote', 'salary_range')
+        }),
+        ('Requirements', {
+            'fields': ('experience_required', 'requirements', 'responsibilities')
+        }),
+        ('Content', {
+            'fields': ('description',)
+        }),
+        ('Status', {
+            'fields': ('is_active',)
+        }),
+    )
+
+@admin.register(ProjectImage)
+class ProjectImageAdmin(admin.ModelAdmin):
+    list_display = ('project', 'caption')
+    list_filter = ('project',)
+    search_fields = ('caption',)
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
