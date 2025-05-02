@@ -89,9 +89,42 @@ def booking(request):
     if request.method == 'POST':
         form = BookingForm(request.POST, user=request.user)
         if form.is_valid():
-            booking = form.save()
+            print("Form is valid")
+            print("Form data:", form.cleaned_data)
+            print("Time slot ID from POST:", request.POST.get('time_slot'))
+            
+            # Get the selected time slot
+            time_slot_id = request.POST.get('time_slot')
+            if not time_slot_id:
+                messages.error(request, 'Please select a time slot')
+                return redirect('booking:booking')
+            
+            try:
+                time_slot = TimeSlot.objects.get(id=time_slot_id)
+                print("Found time slot:", time_slot)
+            except TimeSlot.DoesNotExist:
+                messages.error(request, 'Invalid time slot selected')
+                return redirect('booking:booking')
+            
+            # Create the booking
+            booking = form.save(commit=False)
+            print("Booking object created:", booking)
+            booking.time_slot = time_slot
+            print("Time slot assigned to booking")
+            booking.save()
+            print("Booking saved to database")
+            
+            # Mark the time slot as unavailable
+            time_slot.is_available = False
+            time_slot.save()
+            print("Time slot marked as unavailable")
+            
             messages.success(request, 'Your booking has been confirmed!')
             return redirect('booking:booking_detail', booking_id=booking.id)
+        else:
+            print("Form is invalid")
+            print("Form errors:", form.errors)
+            messages.error(request, 'There was an error with your booking. Please check the form and try again.')
     else:
         # Pre-select service or therapist if provided in query params
         initial_data = {}
@@ -141,29 +174,23 @@ def get_available_time_slots(request):
     except (ValueError, Therapist.DoesNotExist):
         return JsonResponse({'error': 'Invalid date or therapist'}, status=400)
     
-    # Get all time slots for the therapist
-    time_slots = TimeSlot.objects.filter(therapist=therapist)
-    
-    # Get all bookings for the therapist on the selected date
-    bookings = Booking.objects.filter(
+    # Get all available time slots for the therapist on the selected date
+    time_slots = TimeSlot.objects.filter(
         therapist=therapist,
         date=date,
-        status__in=['confirmed', 'pending']
+        is_available=True
     )
     
-    # Get the time slots that are already booked
-    booked_time_slots = [booking.time_slot.id for booking in bookings]
-    
-    # Filter out the booked time slots
-    available_time_slots = time_slots.exclude(id__in=booked_time_slots)
+    # Filter out the time slots that are already booked
+    available_time_slots = time_slots.filter(is_available=True)
     
     # Format the time slots for the response
     formatted_time_slots = []
     for slot in available_time_slots:
         formatted_time_slots.append({
-            'id': slot.id,
             'start_time': slot.start_time.strftime('%H:%M'),
             'end_time': slot.end_time.strftime('%H:%M'),
+            'display': f"{slot.start_time.strftime('%I:%M %p')} - {slot.end_time.strftime('%I:%M %p')}"
         })
     
     return JsonResponse({'time_slots': formatted_time_slots})
@@ -171,12 +198,12 @@ def get_available_time_slots(request):
 @login_required
 def my_bookings(request):
     """View to display user's bookings"""
-    bookings = Booking.objects.filter(user=request.user).order_by('-date', '-time_slot__start_time')
+    bookings = Booking.objects.filter(client=request.user).order_by('-time_slot__date', '-time_slot__start_time')
     
     # Separate bookings into upcoming and past
     today = timezone.now().date()
-    upcoming_bookings = bookings.filter(date__gte=today)
-    past_bookings = bookings.filter(date__lt=today)
+    upcoming_bookings = bookings.filter(time_slot__date__gte=today)
+    past_bookings = bookings.filter(time_slot__date__lt=today)
     
     context = {
         'upcoming_bookings': upcoming_bookings,
@@ -187,7 +214,7 @@ def my_bookings(request):
 @login_required
 def booking_detail(request, booking_id):
     """View to display details of a specific booking"""
-    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    booking = get_object_or_404(Booking, id=booking_id, client=request.user)
     context = {
         'booking': booking
     }
@@ -197,10 +224,10 @@ def booking_detail(request, booking_id):
 @require_POST
 def cancel_booking(request, booking_id):
     """View to cancel a booking"""
-    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    booking = get_object_or_404(Booking, id=booking_id, client=request.user)
     
     # Check if booking can be cancelled (not in the past)
-    if booking.date < timezone.now().date():
+    if booking.time_slot.date < timezone.now().date():
         messages.error(request, 'You cannot cancel a booking that has already passed.')
         return redirect('booking:booking_detail', booking_id=booking.id)
     

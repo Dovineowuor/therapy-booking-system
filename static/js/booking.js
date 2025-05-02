@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateInput = document.getElementById('id_date');
     const therapistSelect = document.getElementById('id_therapist');
     const timeSlotsContainer = document.getElementById('time_slots');
-    const timeSlotInput = document.getElementById('id_time_slot');
+    const timeSlotSelect = document.getElementById('id_time_slot');
     
     // Function to fetch available time slots
     function fetchTimeSlots() {
@@ -52,34 +52,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Render time slots
-                let html = '<div class="time-slots-grid">';
+                // Render time slots as a select dropdown
+                let html = '<select class="form-select" id="id_time_slot" name="time_slot">';
+                html += '<option value="">Select a time slot</option>';
                 data.time_slots.forEach(slot => {
                     html += `
-                        <div class="time-slot" data-id="${slot.id}">
+                        <option value="${slot.id}">
                             ${slot.start_time} - ${slot.end_time}
-                        </div>
+                        </option>
                     `;
                 });
-                html += '</div>';
+                html += '</select>';
                 
                 timeSlotsContainer.innerHTML = html;
                 
-                // Add click event to time slots
-                document.querySelectorAll('.time-slot').forEach(slot => {
-                    slot.addEventListener('click', function() {
-                        // Remove selected class from all time slots
-                        document.querySelectorAll('.time-slot').forEach(s => {
-                            s.classList.remove('selected');
-                        });
-                        
-                        // Add selected class to this time slot
-                        this.classList.add('selected');
-                        
-                        // Set the time slot ID in the hidden input
-                        timeSlotInput.value = this.dataset.id;
+                // Add change event to time slot select
+                const select = document.getElementById('id_time_slot');
+                if (select) {
+                    select.addEventListener('change', function() {
+                        if (this.value) {
+                            this.classList.add('is-valid');
+                            this.classList.remove('is-invalid');
+                        } else {
+                            this.classList.remove('is-valid');
+                            this.classList.add('is-invalid');
+                        }
                     });
-                });
+                }
             })
             .catch(error => {
                 console.error('Error fetching time slots:', error);
@@ -100,6 +99,27 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dateInput.value && therapistSelect.value) {
             fetchTimeSlots();
         }
+    }
+
+    // Handle form submission
+    const form = document.getElementById('booking-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Get the selected time slot
+            const timeSlotSelect = document.getElementById('id_time_slot');
+            if (!timeSlotSelect.value) {
+                e.preventDefault();
+                alert('Please select a time slot before submitting');
+                return false;
+            }
+            
+            // Prevent the time slots from being fetched again
+            dateInput.removeEventListener('change', fetchTimeSlots);
+            therapistSelect.removeEventListener('change', fetchTimeSlots);
+            
+            // Allow the form to submit normally
+            return true;
+        });
     }
     
     // Handle subscription checkbox
