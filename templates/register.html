@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}Register - Therapy Booking{% endblock %}
-
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% block extra_css %}
 <style>
     .register-container {
@@ -18,7 +19,6 @@
     }
     
     .register-header {
-        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
         padding: 2rem;
         text-align: center;
     }
@@ -51,7 +51,7 @@
     }
     
     .benefit-icon {
-        color: #4e73df;
+        color: var(--primary);
         font-size: 1.25rem;
         margin-right: 0.75rem;
     }
@@ -70,7 +70,7 @@
     }
     
     .login-link {
-        color: #4e73df;
+        color: var(--primary);
         text-decoration: none;
         font-weight: 500;
     }
@@ -86,7 +86,7 @@
     <div class="row g-0">
         <div class="col-lg-12">
             <div class="card register-card">
-                <div class="register-header">
+                <div class="register-header bg-primary">
                     <i class="bi bi-person-plus-fill register-icon"></i>
                     <h2 class="text-white mb-0">Join Our Therapy Community</h2>
                     <p class="text-white-50 mb-0">Create an account to book sessions and access exclusive benefits</p>

@@ -3,87 +3,365 @@
 
 {% block title %}Membership Plans - Therapy Booking{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/portfolio.css' %}">
+<style>
+    :root {
+        --primary-color: #2ecc71;
+        --primary-dark: #27ae60;
+        --text-color: #333;
+        --light-text: #6c757d;
+        --border-radius: 8px;
+    }
+    
+    /* Header styling */
+    .pricing-header {
+        background-color: #111;
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .pricing-header h1 {
+        font-weight: 700;
+    }
+    
+    .pricing-header p {
+        opacity: 0.8;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    /* Pricing toggle */
+    .pricing-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+    
+    .toggle-btn {
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+    }
+    
+    .toggle-btn.active {
+        opacity: 1;
+    }
+    
+    .toggle-slider {
+        width: 50px;
+        height: 26px;
+        background-color: var(--primary-color);
+        border-radius: 13px;
+        margin: 0 10px;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .toggle-slider::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        top: 3px;
+        left: 3px;
+        transition: transform 0.3s;
+    }
+    
+    .toggle-slider.yearly::after {
+        transform: translateX(24px);
+    }
+    
+    /* Pricing cards */
+    .pricing-container {
+        margin-top: -6rem;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .pricing-card {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+        border: none;
+    }
+    
+    .pricing-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .pricing-card.highlighted {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .pricing-card.highlighted .card-header {
+        background-color: var(--primary-dark);
+    }
+    
+    .pricing-card.highlighted .text-muted {
+        color: rgba(255,255,255,0.8) !important;
+    }
+    
+    .pricing-card.highlighted .btn-primary {
+        background-color: white;
+        color: var(--primary-color);
+        border-color: white;
+    }
+    
+    .pricing-card.highlighted .btn-primary:hover {
+        background-color: rgba(255,255,255,0.9);
+    }
+    
+    .pricing-card .card-header {
+        padding: 1.5rem;
+        border-bottom: none;
+        text-align: center;
+        font-weight: 700;
+    }
+    
+    .pricing-card .card-body {
+        padding: 2rem;
+    }
+    
+    .price-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+    
+    .price-period {
+        opacity: 0.7;
+        font-size: 1rem;
+    }
+    
+    .recommended-badge {
+        position: absolute;
+        top: 0;
+        right: 2rem;
+        background-color: var(--primary-dark);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    /* Benefits section */
+    .benefits-section {
+        background-color: #f8f9fa;
+        padding: 4rem 0;
+        margin-top: 4rem;
+        border-radius: var(--border-radius);
+    }
+    
+    .benefit-icon {
+        color: var(--primary-color);
+    }
+    
+    /* Active subscription alert */
+    .alert-subscription {
+        background-color: rgba(46, 204, 113, 0.1);
+        border: 1px solid rgba(46, 204, 113, 0.2);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    /* Button styling */
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .pricing-card.highlighted .text-success {
+        color: white !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-12 text-center">
-            <h1 class="display-4">Membership Plans</h1>
-            <p class="lead">Choose a membership plan that suits your needs</p>
+<!-- Pricing Header -->
+<div class="pricing-header">
+    <div class="container">
+        <h1 class="display-4 mb-3">We offer great price plans for your therapy journey</h1>
+        <p class="lead">Choose the perfect membership plan that suits your mental health needs</p>
+        
+        <div class="pricing-toggle">
+            <button class="toggle-btn active" id="monthly-btn">Monthly</button>
+            <div class="toggle-slider" id="toggle-slider"></div>
+            <button class="toggle-btn" id="yearly-btn">Yearly</button>
         </div>
     </div>
-    
+</div>
+
+<div class="container pricing-container">
     {% if active_subscription %}
     <div class="row mb-5">
         <div class="col-12">
-            <div class="alert alert-info">
-                <h4 class="alert-heading">You have an active subscription!</h4>
-                <p>You are currently subscribed to the <strong>{{ active_subscription.plan.name }}</strong> plan.</p>
-                <p>Your subscription is valid until <strong>{{ active_subscription.end_date|date:"F j, Y" }}</strong>.</p>
-                <p>Sessions remaining: <strong>{{ active_subscription.sessions_remaining }}</strong></p>
-                <hr>
-                <p class="mb-0">
-                    <a href="{% url 'booking:my_subscriptions' %}" class="btn btn-primary">View My Subscriptions</a>
-                </p>
+            <div class="alert-subscription alert-dismissible fade show" role="alert">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="mb-3">You have an active subscription!</h4>
+                        <p class="mb-2"><strong>Plan:</strong> {{ active_subscription.plan.name }}</p>
+                        <p class="mb-2"><strong>Valid Until:</strong> {{ active_subscription.end_date|date:"F j, Y" }}</p>
+                        <p class="mb-2"><strong>Sessions Remaining:</strong> {{ active_subscription.sessions_remaining }}</p>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                        <a href="{% url 'booking:my_subscriptions' %}" class="btn btn-primary">View My Subscriptions</a>
+                        <a href="{% url 'booking:cancel_subscription' subscription_id=active_subscription.id %}" class="btn btn-outline-danger ms-2">Cancel Subscription</a>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
     </div>
     {% endif %}
-    
+
     <div class="row">
         {% for plan in plans %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white text-center">
+            <div class="card pricing-card h-100 border-0 shadow-sm {% if forloop.counter == 2 %}highlighted position-relative{% endif %}">
+                {% if forloop.counter == 2 %}
+                <div class="recommended-badge">Recommended</div>
+                {% endif %}
+                <div class="card-header {% if forloop.counter != 2 %}bg-white{% endif %} text-center">
                     <h3 class="my-0 font-weight-bold">{{ plan.name }}</h3>
                 </div>
                 <div class="card-body d-flex flex-column">
-                    <h2 class="card-title pricing-card-title text-center">${{ plan.price }}<small class="text-muted">/{{ plan.duration_days }} days</small></h2>
-                    <p class="card-text">{{ plan.description }}</p>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>{{ plan.sessions_included }} therapy sessions included</li>
+                    <div class="text-center mb-4">
+                        <h2 class="price-value">${{ plan.price }}</h2>
+                        <small class="text-muted price-period">/{{ plan.duration_days }} days</small>
+                    </div>
+                    
+                    <p class="text-muted mb-4">{{ plan.description }}</p>
+                    
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <strong>{{ plan.sessions_included }}</strong> therapy sessions included
+                        </li>
                         {% if plan.discount_percent > 0 %}
-                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>{{ plan.discount_percent }}% discount on additional sessions</li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            {{ plan.discount_percent }}% discount on additional sessions
+                        </li>
                         {% endif %}
                         {% for feature in plan.features %}
-                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>{{ feature }}</li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            {{ feature }}
+                        </li>
                         {% endfor %}
                     </ul>
+                    
                     <div class="mt-auto text-center">
-                        <a href="{% url 'booking:subscribe_to_plan' plan.id %}" class="btn btn-lg btn-block btn-primary">Subscribe Now</a>
+                        <a href="{% url 'booking:subscribe_to_plan' plan.id %}" class="btn btn-lg btn-primary w-100">
+                            Subscribe Now
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="col-12">
-            <div class="alert alert-warning">
-                <p>No membership plans are currently available. Please check back later.</p>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <h4 class="alert-heading">No Membership Plans Available</h4>
+                <p class="mb-0">We're currently updating our membership plans. Please check back later for new options.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
         {% endfor %}
     </div>
-    
+
     <div class="row mt-5">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h3>Membership Benefits</h3>
+                    <h3 class="mb-0">Membership Benefits</h3>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row g-4">
                         <div class="col-md-6">
-                            <h4><i class="bi bi-calendar-check text-primary me-2"></i>Priority Booking</h4>
-                            <p>Members get priority access to booking slots with our most popular therapists.</p>
+                            <div class="d-flex align-items-start mb-4">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-calendar-check benefit-icon fs-1"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-2">Priority Booking</h4>
+                                    <p class="mb-0 text-muted">Members get priority access to booking slots with our most popular therapists.</p>
+                                </div>
+                            </div>
                             
-                            <h4><i class="bi bi-cash text-primary me-2"></i>Cost Savings</h4>
-                            <p>Save money with our membership plans compared to paying for individual sessions.</p>
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-cash benefit-icon fs-1"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-2">Cost Savings</h4>
+                                    <p class="mb-0 text-muted">Save money with our membership plans compared to paying for individual sessions.</p>
+                                </div>
+                            </div>
                         </div>
+                        
                         <div class="col-md-6">
-                            <h4><i class="bi bi-person-check text-primary me-2"></i>Dedicated Support</h4>
-                            <p>Get personalized support and follow-up from our dedicated team of professionals.</p>
+                            <div class="d-flex align-items-start mb-4">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-person-check benefit-icon fs-1"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-2">Dedicated Support</h4>
+                                    <p class="mb-0 text-muted">Get personalized support and follow-up from our dedicated team of professionals.</p>
+                                </div>
+                            </div>
                             
-                            <h4><i class="bi bi-journal-text text-primary me-2"></i>Resources Access</h4>
-                            <p>Access to exclusive resources, worksheets, and self-help materials.</p>
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-journal-text benefit-icon fs-1"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-2">Resources Access</h4>
+                                    <p class="mb-0 text-muted">Access to exclusive resources, worksheets, and self-help materials.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,4 +369,41 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle between monthly and yearly pricing
+        const monthlyBtn = document.getElementById('monthly-btn');
+        const yearlyBtn = document.getElementById('yearly-btn');
+        const toggleSlider = document.getElementById('toggle-slider');
+        
+        if (monthlyBtn && yearlyBtn && toggleSlider) {
+            monthlyBtn.addEventListener('click', function() {
+                monthlyBtn.classList.add('active');
+                yearlyBtn.classList.remove('active');
+                toggleSlider.classList.remove('yearly');
+                // Here you would update prices to show monthly pricing
+                // This would typically involve an AJAX call or page refresh with a parameter
+            });
+            
+            yearlyBtn.addEventListener('click', function() {
+                yearlyBtn.classList.add('active');
+                monthlyBtn.classList.remove('active');
+                toggleSlider.classList.add('yearly');
+                // Here you would update prices to show yearly pricing
+                // This would typically involve an AJAX call or page refresh with a parameter
+            });
+            
+            toggleSlider.addEventListener('click', function() {
+                if (toggleSlider.classList.contains('yearly')) {
+                    monthlyBtn.click();
+                } else {
+                    yearlyBtn.click();
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,132 +12,172 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
     <!-- Custom CSS -->
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Therapy Booking</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-heart-pulse me-2"></i>Therapy Booking
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'booking:services' %}">Services</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'services' %}active{% endif %}" href="{% url 'booking:services' %}">
+                            <i class="bi bi-list-check me-1"></i>Services
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'booking:therapists' %}">Therapists</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'therapists' %}active{% endif %}" href="{% url 'booking:therapists' %}">
+                            <i class="bi bi-people me-1"></i>Therapists
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'booking:membership_plans' %}">Memberships</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'membership_plans' %}active{% endif %}" href="{% url 'booking:membership_plans' %}">
+                            <i class="bi bi-star me-1"></i>Membership
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'portfolio:portfolio' %}">Portfolio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'portfolio:contact' %}">Contact</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}" href="{% url 'portfolio:project_list' %}">
+                            <i class="bi bi-journal-text me-1"></i>Portfolio
+                        </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle"></i> {{ user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'booking:my_bookings' %}">My Bookings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'booking:my_subscriptions' %}">My Subscriptions</a></li>
-                            {% if user.is_staff %}
-                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a></li>
-                            {% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                        </ul>
-                    </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i>{{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item {% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}" href="{% url 'booking:my_bookings' %}">
+                                        <i class="bi bi-calendar-check me-2"></i>My Bookings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if request.resolver_match.url_name == 'my_subscriptions' %}active{% endif %}" href="{% url 'booking:my_subscriptions' %}">
+                                        <i class="bi bi-card-list me-2"></i>My Subscriptions
+                                    </a>
+                                </li>
+                                {% if user.is_staff %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item {% if request.resolver_match.url_name == 'admin:index' %}active{% endif %}" href="{% url 'admin:index' %}">
+                                        <i class="bi bi-gear me-2"></i>Admin Panel
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item {% if request.resolver_match.url_name == 'logout' %}active{% endif %}" href="{% url 'logout' %}">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">
+                                <i class="bi bi-person-plus me-1"></i>Register
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
-    
-    <!-- Messages -->
-    {% if messages %}
-    <div class="container mt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
+
     <!-- Main Content -->
-    <main class="py-4">
+    <main>
         {% block content %}{% endblock %}
     </main>
-    
+
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
+    <footer class="bg-primary-subtle text-white py-4 mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h5>Therapy Booking</h5>
-                    <p>Your mental health matters. Book therapy sessions with our experienced professionals and start your journey to better mental health today.</p>
+                    <p>Your mental health is our priority. Book therapy sessions with our experienced professionals.</p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
                         <li><a href="{% url 'booking:services' %}" class="text-white">Services</a></li>
                         <li><a href="{% url 'booking:therapists' %}" class="text-white">Therapists</a></li>
-                        <li><a href="{% url 'booking:booking' %}" class="text-white">Book a Session</a></li>
-                        <li><a href="{% url 'portfolio:portfolio' %}" class="text-white">Portfolio</a></li>
-                        <li><a href="{% url 'portfolio:contact' %}" class="text-white">Contact</a></li>
+                        <li><a href="{% url 'booking:membership_plans' %}" class="text-white">Membership</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
+
+                <div class="col-md-3">
+                    <h5>Portfolio</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'portfolio:portfolio' %}" class="text-white {% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}">Portfolio</a></li>
+                        <li><a href="{% url 'portfolio:contact' %}" class="text-white {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
+                        <li><a href="{% url 'portfolio:about' %}" class="text-white {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
+                        <!-- career -->
+                        <li><a href="{% url 'portfolio:careers' %}" class="text-white {% if request.resolver_match.url_name == 'careers' %}active{% endif %}">Career</a></li>
+                        <!-- blog -->
+                        <li><a href="{% url 'portfolio:blog' %}" class="text-white {% if request.resolver_match.url_name == 'blog' %}active{% endif %}  ">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
                     <h5>Contact Us</h5>
-                    <address>
-                        <p><i class="bi bi-geo-alt"></i> 123 Therapy Street<br>Wellness City, WC 12345</p>
-                        <p><i class="bi bi-telephone"></i> (123) 456-7890</p>
-                        <p><i class="bi bi-envelope"></i> info@therapybooking.com</p>
+                    <address class="text-white mb-0">
+                        <a class="text-white text-decoration-none" href="https://goo.gl/maps/s7kVZP7PzKv1GKX68" target="_blank"><i class="bi bi-geo-alt me-2"></i>Jamhuri Estate, Ngong Road - Nairobi Kenya</a><br>
+                        <a class="text-white text-decoration-none" href="tel:+254 111335494"><i class="bi bi-telephone me-2"></i>+254 111335494</a><br>
+                        <a class="text-white text-decoration-none" href="mailto:dovetecenterprises@gmail.com"><i class="bi bi-envelope me-2"></i>dovetecenterprises@gmail.com</a>
                     </address>
-                    <div class="social-icons">
-                        <a href="#" class="text-white me-2"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-white me-2"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="text-white me-2"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="bi bi-linkedin"></i></a>
-                    </div>
                 </div>
             </div>
             <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="footer-bottom">
+                        <div class="footer-developer">
+                            <p class="mb-0">Developed by <a href="https://dovetecenterprises.netlify.app" target="_blank" class="text-white">Dove Tech Enterprises</a></p>
+                        </div>
+                        <div class="footer-social-links">
+                            <a href="https://www.facebook.com/dovetecenterprises" target="_blank" class="social-link me-2"><i class="bi bi-facebook"></i></a>
+                            <a href="https://www.twitter.com/dovetecenterprises" target="_blank" class="social-link me-2"><i class="bi bi-twitter"></i></a>
+                            <a href="https://www.instagram.com/dovetecenterprises" target="_blank" class="social-link me-2"><i class="bi bi-instagram"></i></a>
+                            <a href="https://www.linkedin.com/company/dovetecenterprises" target="_blank" class="social-link me-2"><i class="bi bi-linkedin"></i></a>
+                            <a href="https://www.youtube.com/dovetecenterprises" target="_blank" class="social-link me-2"><i class="bi bi-youtube"></i></a>
+                            <a href="https://www.tiktok.com/@dovetecenterprises" target="_blank" class="social-link"><i class="bi bi-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="text-center">
-                <p class="mb-0">&copy; {% now "Y" %} Therapy Booking. All rights reserved.</p>
+                <p>&copy; {% now "Y" %} Therapy Booking. All rights reserved.</p>
             </div>
         </div>
     </footer>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Custom JS -->
-    <script src="{% static 'js/script.js' %}"></script>
-    
+    <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

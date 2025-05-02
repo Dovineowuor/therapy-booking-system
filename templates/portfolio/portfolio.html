@@ -1,122 +1,228 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}Portfolio - Therapy Booking{% endblock %}
 
-{% block title %}Portfolio{% endblock %}
+{% block extra_css %}
+<style>
+    .hero-section {
+        background-color: #f8f9fa;
+        padding: 5rem 0;
+        position: relative;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(135deg, rgba(78, 115, 223, 0.1) 0%, rgba(78, 115, 223, 0) 100%);
+        z-index: 0;
+    }
+    
+    .hero-section .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .category-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .category-icon {
+        font-size: 2.5rem;
+        color: #4e73df;
+    }
+    
+    .featured-project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    
+    .featured-project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .featured-project-image {
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .testimonial-card {
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        height: 100%;
+    }
+    
+    .testimonial-image {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero text-center">
+<div class="hero-section">
     <div class="container">
-        <h1 class="display-4 mb-4">Our Portfolio</h1>
-        <p class="lead mb-5">Explore our work and see how we've helped clients achieve their mental health goals.</p>
-    </div>
-</section>
-
-<!-- Featured Projects Section -->
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Featured Projects</h2>
-        <div class="row">
-            {% for project in featured_projects %}
-            <div class="col-md-4 portfolio-item">
-                <div class="card h-100">
-                    <div class="portfolio-img">
-                        {% if project.image %}
-                        <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
-                        {% else %}
-                        <img src="{% static 'images/project-placeholder.jpg' %}" class="card-img-top" alt="{{ project.title }}">
-                        {% endif %}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ project.title }}</h5>
-                        <p class="card-text"><small class="text-muted">{{ project.category.name }}</small></p>
-                        <p class="card-text">{{ project.description|truncatewords:20 }}</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-0">
-                        <a href="{% url 'portfolio:project_detail' project.slug %}" class="btn btn-outline-primary">View Project</a>
-                    </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">Our Therapy Portfolio</h1>
+                <p class="lead mb-4">Explore our therapy services and success stories. We're dedicated to providing high-quality mental health care tailored to your needs.</p>
+                <div class="d-flex flex-wrap">
+                    <a href="{% url 'portfolio:project_list' %}" class="btn btn-primary me-2 mb-2">View All Projects</a>
+                    <a href="{% url 'portfolio:contact' %}" class="btn btn-outline-primary mb-2">Contact Us</a>
                 </div>
             </div>
-            {% empty %}
-            <div class="col-12 text-center">
-                <p>No featured projects available at the moment.</p>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{% static 'images/portfolio-hero.svg' %}" alt="Portfolio" class="img-fluid">
             </div>
-            {% endfor %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'portfolio:project_list' %}" class="btn btn-primary">View All Projects</a>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Categories Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Project Categories</h2>
-        <div class="row justify-content-center">
+<div class="container mt-5">
+    <!-- Categories Section -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Our Therapy Categories</h2>
+            <p class="text-muted">Explore our different therapy specializations</p>
+        </div>
+        
+        <div class="row">
             {% for category in categories %}
-            <div class="col-md-4 col-lg-3 mb-4">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ category.name }}</h5>
-                        <p class="card-text">{{ category.description|truncatewords:10 }}</p>
-                        <a href="{% url 'portfolio:project_list' %}?category={{ category.slug }}" class="btn btn-outline-primary">View Projects</a>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center">
-                <p>No categories available at the moment.</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- Testimonials Section -->
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Client Testimonials</h2>
-        <div class="row">
-            {% for testimonial in testimonials %}
-            <div class="col-md-4">
-                <div class="testimonial">
-                    <p class="mb-3">"{{ testimonial.quote }}"</p>
-                    <div class="d-flex align-items-center">
-                        {% if testimonial.image %}
-                        <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle me-3" width="50" height="50">
-                        {% endif %}
-                        <div>
-                            <p class="mb-0 testimonial-author">{{ testimonial.name }}</p>
-                            {% if testimonial.position or testimonial.company %}
-                            <p class="mb-0 small text-muted">
-                                {% if testimonial.position %}{{ testimonial.position }}{% endif %}
-                                {% if testimonial.position and testimonial.company %} at {% endif %}
-                                {% if testimonial.company %}{{ testimonial.company }}{% endif %}
-                            </p>
-                            {% endif %}
+                <div class="col-md-4 mb-4">
+                    <div class="card category-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="bi bi-grid-3x3-gap category-icon"></i>
+                            </div>
+                            <h3 class="card-title">{{ category.name }}</h3>
+                            <p class="card-text text-muted">{{ category.description|default:"Explore our therapy services in this category." }}</p>
+                            <a href="{% url 'portfolio:project_list' %}?category={{ category.slug }}" class="btn btn-outline-primary mt-3">View Projects</a>
                         </div>
                     </div>
                 </div>
-            </div>
             {% empty %}
-            <div class="col-12 text-center">
-                <p>No testimonials available at the moment.</p>
-            </div>
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No categories available at the moment.
+                    </div>
+                </div>
             {% endfor %}
         </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'portfolio:testimonials' %}" class="btn btn-primary">View All Testimonials</a>
+    </section>
+    
+    <!-- Featured Projects Section -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Featured Projects</h2>
+            <p class="text-muted">Highlights from our therapy portfolio</p>
         </div>
-    </div>
-</section>
-
-<!-- Contact Section -->
-<section class="py-5 bg-light">
-    <div class="container text-center">
-        <h2 class="mb-4">Ready to Start Your Project?</h2>
-        <p class="lead mb-4">Contact us today to discuss how we can help you achieve your mental health goals.</p>
-        <a href="{% url 'portfolio:contact' %}" class="btn btn-primary btn-lg">Get in Touch</a>
-    </div>
-</section>
+        
+        <div class="row">
+            {% for project in featured_projects %}
+                <div class="col-md-4 mb-4">
+                    <div class="card featured-project-card h-100">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="card-img-top featured-project-image" alt="{{ project.title }}">
+                        {% else %}
+                            <img src="{% static 'images/project-placeholder.jpg' %}" class="card-img-top featured-project-image" alt="{{ project.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <span class="badge bg-primary mb-2">{{ project.category.name }}</span>
+                            <h4 class="card-title">{{ project.title }}</h4>
+                            <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{ project.date_completed|date:"F Y" }}</small>
+                                <a href="{% url 'portfolio:project_detail' project.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No featured projects available at the moment.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:project_list' %}" class="btn btn-primary">View All Projects</a>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Client Testimonials</h2>
+            <p class="text-muted">What our clients say about our therapy services</p>
+        </div>
+        
+        <div class="row">
+            {% for testimonial in testimonials %}
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card p-4">
+                        <div class="d-flex mb-3">
+                            {% if testimonial.image %}
+                                <img src="{{ testimonial.image.url }}" class="testimonial-image me-3" alt="{{ testimonial.name }}">
+                            {% else %}
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 70px; height: 70px;">
+                                    <span class="h4 mb-0">{{ testimonial.name|slice:":1" }}</span>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-1">{{ testimonial.name }}</h5>
+                                {% if testimonial.position or testimonial.company %}
+                                    <p class="text-muted mb-0">
+                                        {% if testimonial.position %}{{ testimonial.position }}{% endif %}
+                                        {% if testimonial.position and testimonial.company %} at {% endif %}
+                                        {% if testimonial.company %}{{ testimonial.company }}{% endif %}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p class="mb-0">{{ testimonial.quote|truncatewords:30 }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No testimonials available at the moment.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:testimonial_list' %}" class="btn btn-outline-primary">View All Testimonials</a>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="bg-light p-5 rounded text-center mb-5">
+        <h2 class="mb-3">Ready to start your therapy journey?</h2>
+        <p class="lead mb-4">Contact us today to discuss your needs or book a session with one of our experienced therapists.</p>
+        <div class="d-flex flex-wrap justify-content-center">
+            <a href="{% url 'booking:booking' %}" class="btn btn-primary me-2 mb-2">Book a Session</a>
+            <a href="{% url 'portfolio:contact' %}" class="btn btn-outline-primary mb-2">Contact Us</a>
+        </div>
+    </section>
+</div>
 {% endblock %}
