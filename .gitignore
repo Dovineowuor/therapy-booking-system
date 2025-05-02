@@ -23,7 +23,7 @@ var/
 # Django
 *.log
 local_settings.py
-db.sqlite3
+*.sqlite3
 db.sqlite3-journal
 media/
 
@@ -31,6 +31,8 @@ media/
 venv/
 ENV/
 env/
+.venv/
+.env
 
 # IDE
 .idea/

@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from booking.models import Booking, Service, Therapist, TimeSlot
+from booking.models import Booking, TherapyService as Service, Therapist, TimeSlot
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Div, HTML
 

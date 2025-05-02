@@ -4,7 +4,7 @@ from .membership_views import (
 )
 
 from .booking_views import (
-    services, service_detail, therapists, therapist_detail,
+    home, services, service_detail, therapists, therapist_detail,
     booking, get_available_time_slots, my_bookings, booking_detail,
-    cancel_booking
+    cancel_booking, register
 )

@@ -25,7 +25,41 @@ SECRET_KEY = 'django-insecure-c-9%zep4^_wuvh@lv1fqr5s+7o4ze*2x0g+h7lc2h9(22-v0c_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '0.0.0.0', 'localhost', '127.0.0.1', 'work-1-vyaxztrgbxppghni.prod-runtime.all-hands.dev', 'work-2-vyaxztrgbxppghni.prod-runtime.all-hands.dev']
+ALLOWED_HOSTS = ['*']
+
+# Temporarily disabled for development
+# CSRF_TRUSTED_ORIGINS = ['https://work-1-vyaxztrgbxppghni.prod-runtime.all-hands.dev', 'https://work-2-vyaxztrgbxppghni.prod-runtime.all-hands.dev']
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_DOMAIN = '.prod-runtime.all-hands.dev'
+
+# Security settings for development
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 
 # Application definition
@@ -41,6 +75,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
+    'corsheaders',
     
     # Local apps
     'booking',
@@ -53,13 +88,26 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # Temporarily disabled for development
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Disabled to allow iframe embedding
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CSRF settings - temporarily disabled for development
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://work-1-vyaxztrgbxppghni.prod-runtime.all-hands.dev',
+#     'https://work-2-vyaxztrgbxppghni.prod-runtime.all-hands.dev',
+#     'http://localhost:12000',
+#     'http://localhost:12001',
+#     'http://0.0.0.0:12000',
+#     'http://0.0.0.0:12001',
+# ]
 
 ROOT_URLCONF = 'therapy_project.urls'
 
@@ -139,3 +187,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Authentication settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

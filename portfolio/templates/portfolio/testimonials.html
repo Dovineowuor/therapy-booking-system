@@ -1,0 +1,109 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}Testimonials - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .testimonial-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .testimonial-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+    
+    .testimonial-quote {
+        position: relative;
+        padding: 1.5rem;
+    }
+    
+    .testimonial-quote::before {
+        content: '\201C';
+        font-family: Georgia, serif;
+        font-size: 5rem;
+        position: absolute;
+        top: -2rem;
+        left: 0;
+        color: rgba(78, 115, 223, 0.1);
+        z-index: 0;
+    }
+    
+    .testimonial-quote p {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .testimonial-author {
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Client Testimonials</h1>
+        <p class="lead text-muted">What our clients say about our therapy services</p>
+    </div>
+    
+    <div class="row">
+        {% for testimonial in testimonials %}
+            <div class="col-md-4 mb-4">
+                <div class="card testimonial-card shadow-sm">
+                    <div class="card-body text-center">
+                        {% if testimonial.image %}
+                            <img src="{{ testimonial.image.url }}" class="testimonial-image mb-3" alt="{{ testimonial.name }}">
+                        {% else %}
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                                <span class="h3 mb-0">{{ testimonial.name|slice:":1" }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="testimonial-quote">
+                            <p class="mb-0">{{ testimonial.quote }}</p>
+                        </div>
+                        
+                        <div class="testimonial-author">
+                            <h5 class="mb-1">{{ testimonial.name }}</h5>
+                            {% if testimonial.position or testimonial.company %}
+                                <p class="text-muted mb-0">
+                                    {% if testimonial.position %}{{ testimonial.position }}{% endif %}
+                                    {% if testimonial.position and testimonial.company %} at {% endif %}
+                                    {% if testimonial.company %}{{ testimonial.company }}{% endif %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No testimonials available at the moment.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="mt-5 p-5 bg-light rounded text-center">
+        <h2>Ready to experience our therapy services?</h2>
+        <p class="lead">Join our satisfied clients and book a session today.</p>
+        <div class="mt-4">
+            <a href="{% url 'booking:booking' %}" class="btn btn-primary me-2">Book a Session</a>
+            <a href="{% url 'portfolio:contact' %}" class="btn btn-outline-primary">Contact Us</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

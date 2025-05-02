@@ -19,17 +19,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from booking import views as booking_views
+from booking.views.booking_views import home, register  # Use the register view from booking_views.py
+from booking.views.booking_views import custom_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', booking_views.home, name='home'),
+    path('', home, name='home'),
     path('booking/', include('booking.urls')),
     path('portfolio/', include('portfolio.urls')),
     
     # Authentication URLs
-    path('register/', booking_views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='booking/login.html'), name='login'),
+    path('register/', register, name='register'),
+    path('accounts/login/', custom_login, name='login'),
+    path('login/', custom_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='booking/logout.html'), name='logout'),
     path('password-reset/', 
         auth_views.PasswordResetView.as_view(template_name='booking/password_reset.html'), 

@@ -1,0 +1,206 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .project-header {
+        position: relative;
+        background-color: #f8f9fa;
+        padding: 3rem 0;
+    }
+    
+    .project-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(135deg, rgba(78, 115, 223, 0.1) 0%, rgba(78, 115, 223, 0) 100%);
+        z-index: 0;
+    }
+    
+    .project-header .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .project-image {
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .project-meta {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        padding: 1.5rem;
+    }
+    
+    .project-meta-item {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .project-meta-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .gallery-image {
+        height: 200px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-image:hover {
+        transform: scale(1.05);
+    }
+    
+    .related-project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .related-project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .related-project-image {
+        height: 150px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Project Header -->
+<div class="project-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold">{{ project.title }}</h1>
+                <p class="lead text-muted">{{ project.category.name }}</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'portfolio:project_list' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Projects
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Main Project Content -->
+        <div class="col-lg-8">
+            <!-- Main Project Image -->
+            <div class="mb-4">
+                {% if project.image %}
+                    <img src="{{ project.image.url }}" class="img-fluid project-image w-100" alt="{{ project.title }}">
+                {% else %}
+                    <img src="{% static 'images/project-placeholder.jpg' %}" class="img-fluid project-image w-100" alt="{{ project.title }}">
+                {% endif %}
+            </div>
+            
+            <!-- Project Description -->
+            <div class="mb-5">
+                <h2 class="mb-4">Project Overview</h2>
+                <div class="project-description">
+                    {{ project.description|linebreaks }}
+                </div>
+            </div>
+            
+            <!-- Project Gallery -->
+            {% if project.images.exists %}
+                <div class="mb-5">
+                    <h2 class="mb-4">Project Gallery</h2>
+                    <div class="row g-3">
+                        {% for image in project.images.all %}
+                            <div class="col-md-4">
+                                <a href="{{ image.image.url }}" data-lightbox="project-gallery" data-title="{{ image.caption|default:'' }}">
+                                    <img src="{{ image.image.url }}" class="img-fluid gallery-image w-100" alt="{{ image.caption|default:'Project image' }}">
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Project Sidebar -->
+        <div class="col-lg-4">
+            <div class="project-meta mb-4">
+                <h3 class="mb-4">Project Details</h3>
+                
+                <div class="project-meta-item">
+                    <h6 class="text-muted mb-1">Client</h6>
+                    <p class="mb-0 fw-bold">{{ project.client|default:"Not specified" }}</p>
+                </div>
+                
+                <div class="project-meta-item">
+                    <h6 class="text-muted mb-1">Category</h6>
+                    <p class="mb-0 fw-bold">{{ project.category.name }}</p>
+                </div>
+                
+                <div class="project-meta-item">
+                    <h6 class="text-muted mb-1">Completed</h6>
+                    <p class="mb-0 fw-bold">{{ project.date_completed|date:"F j, Y" }}</p>
+                </div>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="bg-primary text-white p-4 rounded">
+                <h4>Interested in this service?</h4>
+                <p>Contact us to learn more about how we can help you with similar therapy services.</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-light">Contact Us</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Projects -->
+    {% if related_projects %}
+        <div class="mt-5">
+            <h2 class="mb-4">Related Projects</h2>
+            <div class="row">
+                {% for related in related_projects %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm related-project-card">
+                            {% if related.image %}
+                                <img src="{{ related.image.url }}" class="card-img-top related-project-image" alt="{{ related.title }}">
+                            {% else %}
+                                <img src="{% static 'images/project-placeholder.jpg' %}" class="card-img-top related-project-image" alt="{{ related.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ related.title }}</h5>
+                                <p class="card-text">{{ related.description|truncatewords:15 }}</p>
+                                <a href="{% url 'portfolio:project_detail' related.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Lightbox JS for gallery images -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'albumLabel': "Image %1 of %2"
+        });
+    });
+</script>
+{% endblock %}

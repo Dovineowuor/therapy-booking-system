@@ -1,17 +1,55 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 
-from booking.models import Service, Therapist, TimeSlot, Booking, Subscription
-from booking.forms import BookingForm
+from booking.models.booking import TherapyService as Service, Therapist, TimeSlot, Booking
+from booking.models.membership import Subscription
+from booking.forms.booking_forms import BookingForm
+from booking.forms.auth_forms import CustomUserCreationForm
+
+@csrf_exempt
+def custom_login(request):
+    """Custom login view with CSRF exemption for development"""
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                next_url = request.GET.get('next', 'home')
+                return redirect(next_url)
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
+
+def home(request):
+    """Home page view"""
+    services = Service.objects.all()[:3]  # Get 3 featured services
+    therapists = Therapist.objects.all()[:3]  # Get 3 featured therapists
+    
+    context = {
+        'services': services,
+        'therapists': therapists,
+        'is_home': True
+    }
+    return render(request, 'booking/home.html', context)
 
 def services(request):
     """View to display all services"""
-    services = Service.objects.filter(is_active=True)
+    services = Service.objects.all()
     context = {
         'services': services
     }
@@ -19,8 +57,8 @@ def services(request):
 
 def service_detail(request, service_id):
     """View to display details of a specific service"""
-    service = get_object_or_404(Service, id=service_id, is_active=True)
-    therapists = Therapist.objects.filter(services=service, is_active=True)
+    service = get_object_or_404(Service, id=service_id)
+    therapists = Therapist.objects.filter(services=service)
     context = {
         'service': service,
         'therapists': therapists
@@ -29,7 +67,7 @@ def service_detail(request, service_id):
 
 def therapists(request):
     """View to display all therapists"""
-    therapists = Therapist.objects.filter(is_active=True)
+    therapists = Therapist.objects.all()
     context = {
         'therapists': therapists
     }
@@ -37,8 +75,8 @@ def therapists(request):
 
 def therapist_detail(request, therapist_id):
     """View to display details of a specific therapist"""
-    therapist = get_object_or_404(Therapist, id=therapist_id, is_active=True)
-    services = therapist.services.filter(is_active=True)
+    therapist = get_object_or_404(Therapist, id=therapist_id)
+    services = therapist.services.all()
     context = {
         'therapist': therapist,
         'services': services
@@ -59,14 +97,14 @@ def booking(request):
         initial_data = {}
         if 'service_id' in request.GET:
             try:
-                service = Service.objects.get(id=request.GET['service_id'], is_active=True)
+                service = Service.objects.get(id=request.GET['service_id'])
                 initial_data['service'] = service
             except Service.DoesNotExist:
                 pass
         
         if 'therapist_id' in request.GET:
             try:
-                therapist = Therapist.objects.get(id=request.GET['therapist_id'], is_active=True)
+                therapist = Therapist.objects.get(id=request.GET['therapist_id'])
                 initial_data['therapist'] = therapist
             except Therapist.DoesNotExist:
                 pass
@@ -177,3 +215,21 @@ def cancel_booking(request, booking_id):
     
     messages.success(request, 'Your booking has been cancelled.')
     return redirect('booking:my_bookings')
+
+@csrf_exempt
+def register(request):
+    """View for user registration with CSRF exemption for development"""
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Welcome, {user.first_name}! Your account has been created successfully.')
+            return redirect('home')
+        else:
+            # Print form errors for debugging
+            print(f"Form errors: {form.errors}")
+    else:
+        form = CustomUserCreationForm()
+    
+    return render(request, 'register.html', {'form': form})

@@ -31,6 +31,32 @@ class UserRegistrationForm(UserCreationForm):
             Submit('submit', 'Register', css_class='btn btn-primary')
         )
 
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_tag = False  # Don't render form tag, we'll handle it in the template
+        self.helper.layout = Layout(
+            Row(
+                Column('first_name', css_class='form-group col-md-6 mb-3'),
+                Column('last_name', css_class='form-group col-md-6 mb-3'),
+                css_class='row'
+            ),
+            Field('username', css_class='mb-3'),
+            Field('email', css_class='mb-3'),
+            Field('password1', css_class='mb-3'),
+            Field('password2', css_class='mb-3'),
+        )
+
 class BookingForm(forms.ModelForm):
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     service = forms.ModelChoiceField(queryset=TherapyService.objects.filter(is_active=True))

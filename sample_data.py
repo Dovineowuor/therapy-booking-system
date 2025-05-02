@@ -10,7 +10,7 @@ django.setup()
 
 # Import models
 from django.contrib.auth.models import User
-from booking.models.booking import Service, Therapist, TimeSlot, Booking
+from booking.models.booking import TherapyService, Therapist, TimeSlot, Booking
 from booking.models.membership import MembershipPlan, Subscription, SubscriptionPayment
 
 # Create sample users
@@ -29,16 +29,23 @@ def create_users():
     # Create regular users
     users = []
     for i in range(1, 6):
-        if not User.objects.filter(username=f'user{i}').exists():
-            user = User.objects.create_user(
-                username=f'user{i}',
-                email=f'user{i}@example.com',
-                password=f'userpassword{i}',
-                first_name=f'User{i}',
-                last_name=f'Lastname{i}'
-            )
-            users.append(user)
+        user, created = User.objects.get_or_create(
+            username=f'user{i}',
+            defaults={
+                'email': f'user{i}@example.com',
+                'first_name': f'User{i}',
+                'last_name': f'Lastname{i}'
+            }
+        )
+        
+        if created:
+            user.set_password(f'userpassword{i}')
+            user.save()
             print(f"Created user: {user.username}")
+        else:
+            print(f"User already exists: {user.username}")
+            
+        users.append(user)
     
     return users
 
@@ -87,7 +94,7 @@ def create_services():
     
     services = []
     for service_data in services_data:
-        service, created = Service.objects.get_or_create(
+        service, created = TherapyService.objects.get_or_create(
             name=service_data['name'],
             defaults=service_data
         )
@@ -105,64 +112,76 @@ def create_therapists():
     
     therapists_data = [
         {
-            'name': 'Dr. Sarah Johnson',
-            'title': 'Clinical Psychologist',
+            'first_name': 'Sarah',
+            'last_name': 'Johnson',
             'bio': 'Dr. Johnson is a licensed clinical psychologist with over 15 years of experience. She specializes in cognitive-behavioral therapy and has helped hundreds of clients overcome anxiety, depression, and trauma. Her compassionate approach creates a safe space for clients to explore their challenges and work toward positive change.',
-            'email': 'sarah.johnson@example.com',
-            'phone': '(123) 456-7890',
-            'specialties': ['Anxiety', 'Depression', 'Trauma', 'CBT'],
+            'specialization': 'Anxiety, Depression, Trauma, CBT',
+            'experience_years': 15,
         },
         {
-            'name': 'Michael Rodriguez, LMFT',
-            'title': 'Licensed Marriage and Family Therapist',
+            'first_name': 'Michael',
+            'last_name': 'Rodriguez',
             'bio': 'Michael is a licensed marriage and family therapist with expertise in relationship dynamics and family systems. He helps couples and families improve communication, resolve conflicts, and build stronger connections. His warm and engaging style helps clients feel comfortable discussing sensitive issues.',
-            'email': 'michael.rodriguez@example.com',
-            'phone': '(123) 456-7891',
-            'specialties': ['Couples Therapy', 'Family Therapy', 'Relationship Issues'],
+            'specialization': 'Couples Therapy, Family Therapy, Relationship Issues',
+            'experience_years': 10,
         },
         {
-            'name': 'Dr. Emily Chen',
-            'title': 'Psychotherapist',
+            'first_name': 'Emily',
+            'last_name': 'Chen',
             'bio': 'Dr. Chen combines traditional psychotherapy with mindfulness-based approaches to help clients manage stress, anxiety, and life transitions. She believes in treating the whole person and works collaboratively with clients to develop personalized treatment plans that address their unique needs and goals.',
-            'email': 'emily.chen@example.com',
-            'phone': '(123) 456-7892',
-            'specialties': ['Mindfulness', 'Stress Management', 'Life Transitions', 'Anxiety'],
+            'specialization': 'Mindfulness, Stress Management, Life Transitions, Anxiety',
+            'experience_years': 12,
         },
         {
-            'name': 'James Wilson, LCSW',
-            'title': 'Licensed Clinical Social Worker',
+            'first_name': 'James',
+            'last_name': 'Wilson',
             'bio': 'James specializes in helping clients navigate life challenges, trauma, and mental health concerns. With a background in social work, he brings a unique perspective that considers environmental and social factors affecting mental health. His approach is strengths-based and solution-focused.',
-            'email': 'james.wilson@example.com',
-            'phone': '(123) 456-7893',
-            'specialties': ['Trauma', 'PTSD', 'Depression', 'Grief'],
+            'specialization': 'Trauma, PTSD, Depression, Grief',
+            'experience_years': 8,
         },
         {
-            'name': 'Dr. Olivia Thompson',
-            'title': 'Child and Adolescent Psychologist',
+            'first_name': 'Olivia',
+            'last_name': 'Thompson',
             'bio': 'Dr. Thompson specializes in working with children and adolescents facing emotional and behavioral challenges. She uses play therapy, cognitive-behavioral techniques, and family systems approaches to help young clients develop coping skills and improve their emotional well-being.',
-            'email': 'olivia.thompson@example.com',
-            'phone': '(123) 456-7894',
-            'specialties': ['Child Psychology', 'Adolescent Therapy', 'ADHD', 'Behavioral Issues'],
+            'specialization': 'Child Psychology, Adolescent Therapy, ADHD, Behavioral Issues',
+            'experience_years': 14,
         },
     ]
     
     therapists = []
     for therapist_data in therapists_data:
-        specialties = therapist_data.pop('specialties')
+        # Create a user for the therapist
+        first_name = therapist_data.pop('first_name')
+        last_name = therapist_data.pop('last_name')
+        username = f"{first_name.lower()}.{last_name.lower()}"
+        email = f"{username}@example.com"
+        
+        user, created = User.objects.get_or_create(
+            username=username,
+            defaults={
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'is_staff': True
+            }
+        )
+        
+        if created:
+            user.set_password(f"password{first_name.lower()}")
+            user.save()
+            print(f"Created user for therapist: {user.username}")
+        
+        # Create the therapist profile
         therapist, created = Therapist.objects.get_or_create(
-            name=therapist_data['name'],
+            user=user,
             defaults=therapist_data
         )
         
-        # Convert specialties list to string for storage
-        therapist.specialties = ','.join(specialties)
-        therapist.save()
-        
         therapists.append(therapist)
         if created:
-            print(f"Created therapist: {therapist.name}")
+            print(f"Created therapist: {therapist}")
         else:
-            print(f"Therapist already exists: {therapist.name}")
+            print(f"Therapist already exists: {therapist}")
     
     return therapists
 
@@ -208,7 +227,7 @@ def create_time_slots(therapists):
                     is_available=True
                 )
                 time_slots.append(time_slot)
-                print(f"Created time slot: {time_slot.date} {time_slot.start_time}-{time_slot.end_time} with {therapist.name}")
+                print(f"Created time slot: {time_slot.date} {time_slot.start_time}-{time_slot.end_time} with {therapist}")
     
     return time_slots
 
@@ -219,6 +238,7 @@ def create_membership_plans():
     plans_data = [
         {
             'name': 'Basic Plan',
+            'slug': 'basic-plan',
             'description': 'Perfect for occasional therapy needs. Includes 4 sessions per month at a discounted rate.',
             'price': Decimal('399.00'),
             'duration_days': 30,
@@ -227,6 +247,7 @@ def create_membership_plans():
         },
         {
             'name': 'Standard Plan',
+            'slug': 'standard-plan',
             'description': 'Our most popular plan. Includes 8 sessions per month, perfect for regular therapy.',
             'price': Decimal('699.00'),
             'duration_days': 30,
@@ -235,6 +256,7 @@ def create_membership_plans():
         },
         {
             'name': 'Premium Plan',
+            'slug': 'premium-plan',
             'description': 'Comprehensive therapy support with unlimited sessions for those who need intensive care.',
             'price': Decimal('999.00'),
             'duration_days': 30,
@@ -280,7 +302,7 @@ def create_subscriptions(users, plans):
             plan=plan,
             start_date=start_date,
             end_date=end_date,
-            is_active=True,
+            status='active',
             sessions_remaining=plan.sessions_included - random.randint(0, 3)
         )
         
@@ -334,14 +356,12 @@ def create_bookings(users, services, time_slots, subscriptions):
                 break
         
         booking = Booking.objects.create(
-            user=user,
+            client=user,
             service=service,
             therapist=therapist,
             time_slot=past_slot,
-            date=past_date,
-            notes=f"Past booking for {service.name}",
             status='completed',
-            is_paid=True,
+            notes=f"Past booking for {service.name}",
             subscription=user_subscription
         )
         
@@ -352,7 +372,7 @@ def create_bookings(users, services, time_slots, subscriptions):
                 user_subscription.save()
         
         bookings.append(booking)
-        print(f"Created past booking: {booking.service.name} on {booking.date}")
+        print(f"Created past booking: {booking.service.name} on {booking.time_slot.date}")
     
     # Create future bookings
     available_slots = [slot for slot in time_slots if slot.is_available]
@@ -365,19 +385,17 @@ def create_bookings(users, services, time_slots, subscriptions):
         # Check if user has subscription
         user_subscription = None
         for subscription in subscriptions:
-            if subscription.user == user and subscription.is_active:
+            if subscription.user == user and subscription.is_active():
                 user_subscription = subscription
                 break
         
         booking = Booking.objects.create(
-            user=user,
+            client=user,
             service=service,
             therapist=slot.therapist,
             time_slot=slot,
-            date=slot.date,
-            notes=f"Future booking for {service.name}",
             status='confirmed',
-            is_paid=True,
+            notes=f"Future booking for {service.name}",
             subscription=user_subscription
         )
         
@@ -386,7 +404,7 @@ def create_bookings(users, services, time_slots, subscriptions):
         slot.save()
         
         bookings.append(booking)
-        print(f"Created future booking: {booking.service.name} on {booking.date}")
+        print(f"Created future booking: {booking.service.name} on {booking.time_slot.date}")
     
     return bookings
 

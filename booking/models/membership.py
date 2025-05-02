@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 import uuid
+import datetime
 
 class MembershipPlan(models.Model):
     """Model for different membership plans"""
@@ -51,7 +52,10 @@ class Subscription(models.Model):
         super().save(*args, **kwargs)
     
     def is_active(self):
-        return self.status == 'active' and self.end_date > timezone.now()
+        now = timezone.now()
+        if isinstance(self.end_date, datetime.date):
+            now = now.date()
+        return self.status == 'active' and self.end_date > now
     
     def days_remaining(self):
         if not self.is_active():

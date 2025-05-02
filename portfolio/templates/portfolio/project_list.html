@@ -1,0 +1,83 @@
+{% extends 'booking/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .project-image {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .category-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{{ title }}</h1>
+    
+    <!-- Category Filter -->
+    <div class="mb-4">
+        <div class="d-flex flex-wrap">
+            <a href="{% url 'portfolio:project_list' %}" class="btn {% if not current_category %}btn-primary{% else %}btn-outline-primary{% endif %} me-2 mb-2">All</a>
+            {% for category in categories %}
+                <a href="{% url 'portfolio:project_list' %}?category={{ category.slug }}" class="btn {% if current_category == category.slug %}btn-primary{% else %}btn-outline-primary{% endif %} me-2 mb-2">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Projects Grid -->
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm project-card">
+                    <div class="position-relative">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="card-img-top project-image" alt="{{ project.title }}">
+                        {% else %}
+                            <img src="{% static 'images/project-placeholder.jpg' %}" class="card-img-top project-image" alt="{{ project.title }}">
+                        {% endif %}
+                        <span class="badge bg-primary category-badge">{{ project.category.name }}</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text text-muted">{{ project.date_completed|date:"F Y" }}</p>
+                        <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="{% url 'portfolio:project_detail' project.slug %}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No projects found in this category.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Contact CTA -->
+    <div class="mt-5 p-4 bg-light rounded text-center">
+        <h3>Interested in our work?</h3>
+        <p class="lead">Contact us to discuss your therapy needs or to learn more about our services.</p>
+        <a href="{% url 'portfolio:contact' %}" class="btn btn-primary">Contact Us</a>
+    </div>
+</div>
+{% endblock %}
