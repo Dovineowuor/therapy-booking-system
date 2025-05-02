@@ -47,3 +47,5 @@ Thumbs.db
 # Project specific
 static/admin/
 static/debug_toolbar/
+cert.pem
+key.pem
